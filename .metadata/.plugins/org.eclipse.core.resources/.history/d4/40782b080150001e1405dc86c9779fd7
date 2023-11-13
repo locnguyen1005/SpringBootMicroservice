@@ -1,0 +1,37 @@
+package com.example.demo.utils;
+
+import java.io.InputStream;
+import java.net.http.HttpClient.Version;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import com.networknt.schema.ValidationMessage;
+
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@NoArgsConstructor
+public class CommonValidate {
+	
+	@SneakyThrows
+	public static void jsonValidate(String json, InputStream inputStream) {
+		JsonSchema jsonSchema = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V7).getSchema(inputStream);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode jsonNode = mapper.readTree(json);
+		Set<ValidationMessage> errorsMessages = jsonSchema.validate(jsonNode);
+		for(ValidationMessage error : errorsMessages) {
+			log.info(error.getPath());		}
+	}
+	public static String formatStringValidate(String message){
+        return message.replaceAll("\\$.","");
+    }
+}

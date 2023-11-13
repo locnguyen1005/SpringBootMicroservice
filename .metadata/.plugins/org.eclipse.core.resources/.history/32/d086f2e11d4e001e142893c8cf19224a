@@ -1,0 +1,54 @@
+package com.example.demo.Service;
+
+import org.hibernate.sql.model.internal.MutationOperationGroupNone;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.Config.Config;
+import com.example.demo.DTO.AccountDTO;
+import com.example.demo.Entity.AccountEntity;
+import com.example.demo.Repository.AccountRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+@Slf4j
+public class AccountService {
+	
+	@Autowired
+	private AccountRepository accountRepository;
+	@Autowired 
+	private ModelMapper mapper;
+	public Flux<AccountDTO> getAllAccount() {
+		return accountRepository.findAll().map(accountEntity -> mapper.map(accountEntity , AccountDTO.class)).switchIfEmpty(Mono.error(new Exception("Account Empty")));
+	}
+	public Mono<Boolean> checkDuplicate(AccountDTO accountDTO){
+		return accountRepository.findByEmail(accountDTO.getEmail())
+				.flatMap(accountEntity -> Mono.just(true))
+				.switchIfEmpty(Mono.just(false));
+	}
+	public Mono<AccountDTO> createAccount(AccountDTO accountDTO){
+		if((checkDuplicate(accountDTO).block()).equals(Boolean.TRUE)) {
+			return Mono.just(accountDTO).doOnError(throwable -> log.error(throwable.getMessage()));
+		}
+		else {
+			System.out.print(checkDuplicate(accountDTO));
+			return Mono.just(accountDTO)
+					.map(newAccountDTO -> mapper.map(newAccountDTO, AccountEntity.class))
+					.flatMap(account -> accountRepository.save(account))
+					.map(accountEntity -> mapper.map(accountEntity, AccountDTO.class));
+		}
+	}
+	public Mono<Void> deleteAccount(AccountDTO accountDTO){
+		if((checkDuplicate(accountDTO).block()).equals(Boolean.TRUE)) {
+			return accountRepository.deleteById(accountDTO.getId());
+		}
+		else {
+			return accountRepository.deleteById(accountDTO.getId());
+		}
+	}
+}

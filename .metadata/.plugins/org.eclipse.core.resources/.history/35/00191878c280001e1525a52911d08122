@@ -1,0 +1,16 @@
+package com.example.demo.Model;
+
+import com.example.demo.DTO.ProductDTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Account_Product {
+	private Long id;
+	private String nameProduct;
+	private String nameUser;
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+	
+   	<changeSet id="create-table-product_account" author="product_account" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="table product_account already exists">
+            <not>
+                <tableExists tableName="product_account" />
+            </not>
+        </preConditions>
+        <createTable tableName="product_account">
+            <column name="idAccount" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="create-table-product_account" author="product_account" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="table product_account already exists">
+            <not>
+                <tableExists tableName="product_account" />
+            </not>
+        </preConditions>
+        <createTable tableName="product_account">
+            <column name="idProduct" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
