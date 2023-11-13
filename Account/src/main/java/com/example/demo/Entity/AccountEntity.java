@@ -17,7 +17,7 @@ import lombok.With;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AccountEntity    {
+public class AccountEntity {
 	@Id
 	private Long id;
 	private String password;

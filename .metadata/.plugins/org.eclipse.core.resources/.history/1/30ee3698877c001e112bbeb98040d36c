@@ -1,7 +1,0 @@
-package com.example.demo.utils;
-
-public class ConstantCommon {
-    public static final String PROFILE_ONBOARDING_TOPIC = "CreateProduct";
-    public static final String PROFILE_ONBOARDED_TOPIC = "CreatedProduct";
-
-}

@@ -26,18 +26,17 @@ import reactor.core.publisher.Mono;
 @Service
 @Slf4j
 public class AccountService {
-	
-	private static final String Class = null;
+
 	@Autowired
 	private AccountRepository accountRepository;
 	@Autowired 
 	private ModelMapper mapper;
 	@Autowired
 	Gson gson = new Gson();
-//	@Autowired
-//    private PasswordEncoder passwordEncoder;
-//	@Autowired
-//    private JwtService jwtService;
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	@Autowired
+    private JwtService jwtService;
 	@Autowired
 	private AccountProducer accountProducer;
 	
@@ -54,7 +53,7 @@ public class AccountService {
 			 return Mono.error(new CommonException(accountDTO.getEmail(), "Account duplicate", HttpStatus.BAD_REQUEST));
 		}
 		else {
-			//accountDTO.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
+			accountDTO.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
 			return Mono.just(accountDTO)
 					.map(newAccountDTO -> mapper.map(newAccountDTO, AccountEntity.class))
 					.flatMap(account -> accountRepository.save(account))
@@ -76,12 +75,9 @@ public class AccountService {
 	public Mono<String> createProduct(String message){
 		return accountProducer.send(ConstantCommon.account, message);
 	}
-//	public String generateToken(String username) {
-//        return jwtService.generateToken(username);
-//    }
-//
-//    public void validateToken(String token) {
-//        jwtService.validateToken(token);
-//    }
 
+    public Mono<AccountEntity> findAccount(String accountDTO){
+		return accountRepository.findByEmail(accountDTO);
+	}
+    
 }

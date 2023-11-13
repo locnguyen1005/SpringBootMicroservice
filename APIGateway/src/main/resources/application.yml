@@ -11,6 +11,8 @@ spring:
           uri: http://localhost:8888
           predicates:
             - Path=/Account/**
+          filters:
+           - AuthenticationFilter
         
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin

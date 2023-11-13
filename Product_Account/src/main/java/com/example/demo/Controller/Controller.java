@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -42,5 +43,24 @@ public class Controller {
                 .map(person -> new Account_Product(person.getName(), personMap.get(person.getAccountid()).getEmail()))
                 .collect(Collectors.toList());
 		return mergedDataList;
+	}
+	@PostMapping("/Post")
+	public Mono<String> registerCourse(){
+		Flux<Product> resultProduct = webBuilder.build().get()
+                .uri("http://localhost:8889/product/getall")
+                .retrieve()
+                .bodyToFlux(Product.class);
+		Flux<Account> resultAccount = webBuilder.build().get()
+                .uri("http://localhost:8888/Account/GetAll")
+                .retrieve()
+                .bodyToFlux(Account.class);
+		
+		Map<Long, Account> personMap = resultAccount.toStream()
+                .collect(Collectors.toMap(Account::getId, account -> account));
+		
+		List<Account_Product> mergedDataList = resultProduct.toStream()
+                .map(person -> new Account_Product(person.getName(), personMap.get(person.getAccountid()).getEmail()))
+                .collect(Collectors.toList());
+		return null;
 	}
 }

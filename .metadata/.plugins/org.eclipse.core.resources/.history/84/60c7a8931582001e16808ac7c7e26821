@@ -1,0 +1,34 @@
+package com.example.demo.Config;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.example.demo.Entity.AccountEntity;
+import com.example.demo.Repository.AccountRepository;
+
+
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
+
+@Slf4j
+public class CustomUserDetailsService implements UserDetailsService{
+
+	@Autowired
+	private AccountRepository repository;
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		System.out.print(username +"1");
+		Mono<AccountEntity> credential = repository.findByEmail("locchotvt10052@gmail.com");
+		log.info(credential.block().getEmail());
+		CustomUserDetails userDetails = new CustomUserDetails(credential.block());
+		
+        return userDetails;
+	}
+	public static <T> Optional<T> toOptional(T value) {
+        return Optional.ofNullable(value);
+    }
+}
