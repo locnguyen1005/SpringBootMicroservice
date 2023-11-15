@@ -23,5 +23,7 @@ public class LessionEntity {
 	private String path;
 	private String title;
 	private String description;
-
+	@Column("productId")
+	private Long productId;
+	private String folder;
 }

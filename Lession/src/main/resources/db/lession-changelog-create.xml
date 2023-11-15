@@ -68,4 +68,28 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="table-lession-add-column-productId" author="lession" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column productId already exists in table lession">
+            <not>
+                <columnExists  tableName="lession" columnName="productId" />
+            </not>
+        </preConditions>
+        <addColumn tableName="lession">
+            <column name="productId" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="table-lession-add-column-folder" author="lession" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column folder already exists in table lession">
+            <not>
+                <columnExists  tableName="lession" columnName="folder" />
+            </not>
+        </preConditions>
+        <addColumn tableName="lession">
+            <column name="folder" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

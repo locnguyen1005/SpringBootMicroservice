@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -15,7 +15,8 @@ import com.example.demo.Model.Account;
 import com.example.demo.Model.Account_Product;
 import com.example.demo.Model.Product;
 
-import liquibase.integration.servlet.LiquibaseJakartaStatusServlet;
+import com.example.demo.Service.Service;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,7 +25,8 @@ public class Controller {
 
 	@Autowired
 	private WebClient.Builder webBuilder;
-	
+	@Autowired
+	private Service service;
 	@GetMapping("/demo")
 	public List<Account_Product> demo(){
 		Flux<Product> resultProduct = webBuilder.build().get()
@@ -62,5 +64,9 @@ public class Controller {
                 .map(person -> new Account_Product(person.getName(), personMap.get(person.getAccountid()).getEmail()))
                 .collect(Collectors.toList());
 		return null;
+	}
+	@GetMapping("/accountregister")
+	public Flux<com.example.demo.Model.AccountRegister> AccountRegister(@RequestBody Long id){
+		return service.getAllProductAccountRegistered(id);
 	}
 }

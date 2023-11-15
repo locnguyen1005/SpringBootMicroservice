@@ -1,5 +1,6 @@
 package com.example.demo.event;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
@@ -18,6 +19,7 @@ import com.example.demo.Utils.Constant;
 import com.example.demo.utils.CommonValidate;
 import com.example.demo.utils.ConstantCommon;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -33,7 +35,7 @@ public class ProductComsumer {
 	@Autowired
 	Gson gson;
 	@KafkaListener(id  = "Partition" , topics = ConstantCommon.account)
-    public void product(@Payload String message){
+    public void product(@Payload String message) throws JsonSyntaxException, IOException{
 		InputStream inputStream = ProductController.class.getClassLoader().getResourceAsStream(Constant.JSON_Product);
 		CommonValidate.jsonValidate(message, inputStream);
 		log.info("product commsumer");

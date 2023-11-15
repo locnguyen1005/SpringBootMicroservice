@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.management.loading.PrivateClassLoader;
 
 import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,34 +29,39 @@ import com.example.demo.Utils.Constant;
 import com.example.demo.utils.CommonValidate;
 import com.example.demo.utils.ConstantCommon;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/product")
 @Slf4j
 public class ProductController {
+	
 	@Autowired
 	private ProductService productService;
 	@Autowired
 	Gson gson;
+	
+	
 	@GetMapping("/getall")
 	public Flux<ProductDTO> getAllProduct(){
 		return productService.getAllProduct();
 	}
 	@PostMapping("/createproduct")
-	public ResponseEntity<Mono<ProductDTO>> createProduct(@RequestBody String product){
-		log.info(product);
+	public ResponseEntity<Mono<ProductDTO>> createProduct(@RequestBody String product) throws JsonSyntaxException, IOException{
 		InputStream inputStream = ProductController.class.getClassLoader().getResourceAsStream(Constant.JSON_Product);
 		CommonValidate.jsonValidate(product, inputStream);
-		log.info("1");
 		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(gson.fromJson(product, ProductDTO.class)));
 	}
-	@PutMapping("/{id}")
-	public ResponseEntity<Mono<ProductDTO>> detailProduct(@PathVariable Long product){
-		return ResponseEntity.status(HttpStatus.CREATED).body(productService.finđById(product));
+	@GetMapping("/{id}")
+	public ResponseEntity<Mono<ProductDTO>> detailProduct(@PathVariable Long id){
+		return ResponseEntity.status(HttpStatus.CREATED).body(productService.finđById(id));
 	}
 
 }

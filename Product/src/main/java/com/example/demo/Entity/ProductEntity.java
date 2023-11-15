@@ -18,4 +18,5 @@ public class ProductEntity {
 	@Column("nameproduct")
 	private String name;
 	private Long accountid;
+	private String folder;
 }

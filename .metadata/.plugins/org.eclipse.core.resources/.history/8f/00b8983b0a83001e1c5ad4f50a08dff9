@@ -1,0 +1,6 @@
+package com.example.demo.Service;
+
+@org.springframework.stereotype.Service
+public class Service {
+
+}

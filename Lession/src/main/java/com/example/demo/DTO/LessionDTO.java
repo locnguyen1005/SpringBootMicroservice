@@ -22,4 +22,6 @@ public class LessionDTO {
 	private String path;
 	private String title;
 	private String description;
+	private Long productId;
+	private String folder;
 }

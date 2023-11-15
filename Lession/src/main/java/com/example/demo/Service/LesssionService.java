@@ -34,7 +34,7 @@ public class LesssionService {
 				.switchIfEmpty(Mono.just(Boolean.FALSE));
 	}
 	public Mono<LessionDTO> createLession(LessionDTO lessionDTO){
-		log.info(lessionDTO.getId() + "description");
+		log.info(lessionDTO.getProductId() + "description");
 		if((checkDuplicate(lessionDTO).block()).equals(Boolean.TRUE)) {
 			 return Mono.error(new CommonException(lessionDTO.getTitle(), "Name lession duplicate", HttpStatus.BAD_REQUEST));
 		}

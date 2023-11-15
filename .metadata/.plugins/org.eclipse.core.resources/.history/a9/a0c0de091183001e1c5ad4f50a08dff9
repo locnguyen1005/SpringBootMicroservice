@@ -1,0 +1,20 @@
+package com.example.demo.Model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Table(name = "accountregister")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountRegister {
+	@Id
+	private long id;
+	private long productId;
+	private long accountId;
+	
+}

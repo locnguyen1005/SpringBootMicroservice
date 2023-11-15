@@ -1,0 +1,9 @@
+package com.example.demo.Repository;
+
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+
+import com.example.demo.Model.Account_Product;
+
+public interface Product_Account_Reopository extends R2dbcRepository<Account_Product,Long> {
+
+}

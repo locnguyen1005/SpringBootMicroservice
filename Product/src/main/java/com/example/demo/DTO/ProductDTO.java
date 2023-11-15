@@ -16,4 +16,5 @@ public class ProductDTO {
 	private Long id;
 	private String name;
 	private Long accountid;
+	private String folder;
 }
