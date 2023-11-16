@@ -54,4 +54,28 @@
             </column>
 		</addColumn>
 	</changeSet>
+	<changeSet id="add-colume-starttime" author="product" runAlways="true">
+		<preConditions onFail="CONTINUE" onFailMessage="colume starttime already exists in table product">
+			<not>
+				<columnExists tableName="product" columnName="starttime" />
+			</not>
+		</preConditions>
+		<addColumn tableName="product">
+			<column name="starttime" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="add-colume-maxuser" author="product" runAlways="true">
+		<preConditions onFail="CONTINUE" onFailMessage="colume maxuser already exists in table product">
+			<not>
+				<columnExists tableName="product" columnName="maxuser" />
+			</not>
+		</preConditions>
+		<addColumn tableName="product">
+			<column name="maxuser" type="TIMESTAMP">
+                <constraints nullable="true" />
+            </column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

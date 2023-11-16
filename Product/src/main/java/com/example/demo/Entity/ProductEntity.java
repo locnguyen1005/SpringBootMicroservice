@@ -1,5 +1,7 @@
 package com.example.demo.Entity;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -19,4 +21,6 @@ public class ProductEntity {
 	private String name;
 	private Long accountid;
 	private String folder;
+	private LocalDateTime starttime;
+	private Long maxuser;
 }

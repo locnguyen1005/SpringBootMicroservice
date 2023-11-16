@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.Model.Account;
+import com.example.demo.Model.AccountRegister;
 import com.example.demo.Model.Account_Product;
 import com.example.demo.Model.Product;
 
@@ -66,7 +67,12 @@ public class Controller {
 		return null;
 	}
 	@GetMapping("/accountregister")
-	public Flux<com.example.demo.Model.AccountRegister> AccountRegister(@RequestBody Long id){
+	public Flux<AccountRegister> accountRegister(@RequestBody Long id){
 		return service.getAllProductAccountRegistered(id);
+	}
+	@PostMapping("/registerproduct")
+	public Mono<AccountRegister> register(AccountRegister accountRegister){
+
+		return 	service.registerProduct(accountRegister);
 	}
 }

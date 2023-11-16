@@ -24,4 +24,5 @@ public class LessionDTO {
 	private String description;
 	private Long productId;
 	private String folder;
+	private Long delete;
 }

@@ -26,4 +26,5 @@ public class LessionEntity {
 	@Column("productId")
 	private Long productId;
 	private String folder;
+	private Long delete;
 }

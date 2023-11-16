@@ -1,9 +1,12 @@
 package com.example.demo.DTO;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 
 import com.example.demo.Entity.ProductEntity;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +20,6 @@ public class ProductDTO {
 	private String name;
 	private Long accountid;
 	private String folder;
+	private LocalDateTime starttime;
+	private Long maxuser;
 }
