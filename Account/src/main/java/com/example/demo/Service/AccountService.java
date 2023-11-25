@@ -1,6 +1,5 @@
 package com.example.demo.Service;
 
-import org.hibernate.sql.model.internal.MutationOperationGroupNone;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +10,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.Common.CommonException;
 import com.example.demo.Config.Config;
 import com.example.demo.DTO.AccountDTO;
-import com.example.demo.DTO.ProductDTO;
+
 import com.example.demo.Entity.AccountEntity;
-import com.example.demo.Event.AccountProducer;
 import com.example.demo.Repository.AccountRepository;
 import com.example.demo.utils.ConstantCommon;
 import com.google.gson.Gson;
@@ -37,8 +35,7 @@ public class AccountService {
     private PasswordEncoder passwordEncoder;
 	@Autowired
     private JwtService jwtService;
-	@Autowired
-	private AccountProducer accountProducer;
+
 	
 	public Flux<AccountDTO> getAllAccount() {
 		return accountRepository.findAll().map(accountEntity -> mapper.map(accountEntity , AccountDTO.class)).switchIfEmpty(Mono.error(new Exception("Account Empty")));
@@ -72,9 +69,7 @@ public class AccountService {
 			return Mono.error(new Exception());
 		}
 	}
-	public Mono<String> createProduct(String message){
-		return accountProducer.send(ConstantCommon.account, message);
-	}
+
 
     public Mono<AccountEntity> findAccount(String accountDTO){
 		return accountRepository.findByEmail(accountDTO);

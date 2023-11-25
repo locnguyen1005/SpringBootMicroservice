@@ -41,6 +41,18 @@
             </column>
 		</addColumn>
 	</changeSet>
+	<changeSet id="add-colume-price-product" author="product" runAlways="true">
+		<preConditions onFail="CONTINUE" onFailMessage="colume price already exists in table product">
+			<not>
+				<columnExists tableName="product" columnName="price" />
+			</not>
+		</preConditions>
+		<addColumn tableName="product">
+			<column name="price" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+		</addColumn>
+	</changeSet>
 	
 	<changeSet id="add-colume-folder" author="product" runAlways="true">
 		<preConditions onFail="CONTINUE" onFailMessage="colume folder already exists in table product">
@@ -50,18 +62,6 @@
 		</preConditions>
 		<addColumn tableName="product">
 			<column name="folder" type="VARCHAR(255)">
-                <constraints nullable="false" />
-            </column>
-		</addColumn>
-	</changeSet>
-	<changeSet id="add-colume-starttime" author="product" runAlways="true">
-		<preConditions onFail="CONTINUE" onFailMessage="colume starttime already exists in table product">
-			<not>
-				<columnExists tableName="product" columnName="starttime" />
-			</not>
-		</preConditions>
-		<addColumn tableName="product">
-			<column name="starttime" type="TIMESTAMP">
                 <constraints nullable="false" />
             </column>
 		</addColumn>

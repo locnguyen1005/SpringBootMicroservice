@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.Common.CommonException;
 import com.example.demo.DTO.ProductDTO;
 import com.example.demo.Entity.ProductEntity;
+import com.example.demo.Model.Account;
 import com.example.demo.Repository.ProductRepository;
-import com.example.demo.event.ProductProducer;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -84,11 +87,10 @@ public class ProductService {
 	@Value("${google.credentials.folder.path}")
 	private Resource credentialsFolder;
 
-	
-	private GoogleAuthorizationCodeFlow flow;
-	
 	@Autowired
-	private ProductProducer producer;
+	private WebClient.Builder webBuilder;
+	private GoogleAuthorizationCodeFlow flow;
+
 	@PostConstruct
 	public void init() throws Exception {
 		GoogleClientSecrets secrets = GoogleClientSecrets.load(JSON_FACTORY,
@@ -105,9 +107,9 @@ public class ProductService {
 				.switchIfEmpty(Mono.just(Boolean.FALSE));
 	}
 	public Mono<ProductDTO> createProduct(ProductDTO productDTO) throws IOException{
-		ProductDTO newproduDto = new ProductDTO();
-		newproduDto.setAccountid(productDTO.getAccountid());
-		newproduDto.setName(productDTO.getName());
+		ProductDTO newproduDto = modelMapper.map(productDTO, ProductDTO.class);
+		
+		
 		
 		Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
 
@@ -120,6 +122,8 @@ public class ProductService {
 		file=drive.files().create(file).setFields("id").execute();
 		newproduDto.setFolder(file.getId());
 		log.info(file.getId());
+
+		
 		if(checkDuplicate(newproduDto).block().equals(Boolean.TRUE)) {
 			log.info(newproduDto.toString());
 			return Mono.error(new CommonException(newproduDto.getName(), "The course name already exists", HttpStatus.BAD_REQUEST));

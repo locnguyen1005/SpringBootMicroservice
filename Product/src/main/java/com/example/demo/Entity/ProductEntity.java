@@ -20,7 +20,8 @@ public class ProductEntity {
 	@Column("nameproduct")
 	private String name;
 	private Long accountid;
+	private Long price;
+	private String description;
 	private String folder;
-	private LocalDateTime starttime;
-	private Long maxuser;
+	private Long category;
 }

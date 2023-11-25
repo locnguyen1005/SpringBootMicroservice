@@ -1,8 +1,10 @@
 package com.example.demo.Config;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.demo.Entity.AccountEntity;
@@ -19,7 +21,10 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+    	Collection<GrantedAuthority> authorities =
+                new ArrayList<GrantedAuthority>();
+    	authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        return authorities;
     }
 
     @Override

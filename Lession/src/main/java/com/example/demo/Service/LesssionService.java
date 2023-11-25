@@ -54,9 +54,11 @@ public class LesssionService {
 					 .map((accountEntity -> mapper.map(accountEntity, LessionDTO.class)));
 		}
 		else {
-
 			return Mono.error(new Exception());
 		}
+	}
+	public Flux<LessionDTO> getAllLessionByProductId(Long productId) {
+		return lessionRepository.findByProductId(productId).map(lessionEntity -> mapper.map(lessionEntity , LessionDTO.class)).switchIfEmpty(Mono.error(new Exception("Lession Empty")));
 	}
 	
 }

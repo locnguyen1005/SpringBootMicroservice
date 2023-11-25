@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.DTO.ProductDTO;
+import com.example.demo.Model.Account;
+import com.example.demo.Model.Product;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Utils.Constant;
 import com.example.demo.utils.CommonValidate;
@@ -41,6 +45,7 @@ import org.springframework.http.ResponseEntity;
 @RestController
 @RequestMapping("/product")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3006")
 public class ProductController {
 	
 	@Autowired
@@ -55,6 +60,7 @@ public class ProductController {
 	}
 	@PostMapping("/createproduct")
 	public ResponseEntity<Mono<ProductDTO>> createProduct(@RequestBody String product) throws JsonSyntaxException, IOException{
+		log.info(product);
 		InputStream inputStream = ProductController.class.getClassLoader().getResourceAsStream(Constant.JSON_Product);
 		CommonValidate.jsonValidate(product, inputStream);
 		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(gson.fromJson(product, ProductDTO.class)));

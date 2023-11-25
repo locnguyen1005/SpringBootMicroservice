@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,9 +26,9 @@ import org.springframework.web.service.annotation.GetExchange;
 
 import com.example.demo.Config.CustomUserDetailsService;
 import com.example.demo.DTO.AccountDTO;
-import com.example.demo.DTO.ProductDTO;
+
 import com.example.demo.Entity.AccountEntity;
-import com.example.demo.Event.AccountProducer;
+
 import com.example.demo.Repository.AccountRepository;
 import com.example.demo.Service.AccountService;
 import com.example.demo.Service.JwtService;
@@ -41,13 +42,13 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3006/") // Replace with the origin of your React app
 @RequestMapping("Account")
 @Slf4j
 public class AccountController {
 	@Autowired
 	private AccountRepository accountRepository;
-	@Autowired
-	private AccountProducer accountProducer;
+
 	@Autowired
 	private AccountService accountService;
 	@Autowired
@@ -72,26 +73,25 @@ public class AccountController {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(accountService.createAccount(gson.fromJson(requestStr, AccountDTO.class)));
 	}
-
-	@PostMapping("/CreateProduct")
-	public ResponseEntity<Mono<String>> createProduct(@RequestBody String requestStr) {
-		InputStream inputStream = ProductController.class.getClassLoader()
-				.getResourceAsStream(com.example.demo.Utils.Constant.JSON_Product);
-		CommonValidate.jsonValidate(requestStr, inputStream);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createProduct(requestStr));
-	}
 	@PostMapping("/authenticate")
     public String authenticateAndGetToken(@RequestBody AccountDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
+        	log.info(jwtService.generateToken(authRequest.getEmail()));
             return jwtService.generateToken(authRequest.getEmail());
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
-
-
     }
+	@GetMapping("/login")
+	public Mono<AccountEntity> login(){
+		
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			Mono<AccountEntity> accountEntity = accountService.findAccount(userDetails.getUsername());
+			return accountEntity;
+		
+	}
 
 	
 }

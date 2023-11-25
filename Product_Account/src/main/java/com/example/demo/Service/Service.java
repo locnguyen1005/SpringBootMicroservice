@@ -40,9 +40,7 @@ public class Service {
                 .bodyToMono(Product.class);
 		 LocalDateTime currentDate = LocalDateTime.now();
 		 Flux<AccountRegister> allProductById = repository.findByProductId(accountRegister.getProductId());
-		 if(currentDate.compareTo(resultProduct.block().getStarttime()) < 0 && resultProduct.block().getMaxuser() < allProductById.count().block() ) {
-			 return Mono.error(new Exception());
-		 }
+
 		 
 		return Mono.just(accountRegister);
 	}

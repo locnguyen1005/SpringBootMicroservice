@@ -7,6 +7,14 @@
       "minLength": 10,
       "maxLength": 100,
       "pattern": ".*[a-zA-Z]+.*"
+    },
+    "accountid": {
+      "type": "integer"
+ 
+    },
+    "price": {
+      "type": "integer"
+
     }
   },
   "required": ["name"]

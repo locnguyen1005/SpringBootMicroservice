@@ -14,11 +14,9 @@
     },
     "price": {
       "type": "integer"
-    },
-    "coupon": {
-      "type": "string"
     }
+
   },
-  "required": ["accountid", "productid", "day", "price", "coupon"],
+  "required": ["accountid", "productid", "day", "price"],
   "additionalProperties": false
 }

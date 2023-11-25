@@ -3,6 +3,7 @@ package com.example.demo.Controlller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -124,22 +125,26 @@ public class LessionController {
 		InputStream inputStream = LessionController.class.getClassLoader().getResourceAsStream(com.example.demo.Utils.Constant.JSON_CREATE_ACCOUNT);
 		CommonValidate.jsonValidate(requestStr, inputStream);
 		LessionDTO lessionDTO = gson.fromJson(requestStr,LessionDTO.class);
+		
 		//gọi api product để lấy folder của product đó và set vào lession
 		Mono<Product> resultProduct = webBuilder.build().get()
                 .uri("http://localhost:8889/product/"+lessionDTO.getProductId())
                 .retrieve()
                 .bodyToMono(Product.class);
 		lessionDTO.setFolder(resultProduct.block().getFolder());
-		log.info(lessionDTO.getProductId()+"loc");
-		Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
-		Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName("googledrivespringbootexample").build();
-		File file = new File();
-		file.setName(lessionDTO.getTitle()+".mp4");
-		FileContent content = new FileContent("video/mp4", new java.io.File(lessionDTO.getPath()));
-		file.setParents(Arrays.asList(resultProduct.block().getFolder()));
-		File uploadedFile = drive.files().create(file, content).setFields("id").execute();
-		String fileReference = uploadedFile.getId();
-		lessionDTO.setVideo(fileReference);
+		if(resultProduct.block().getCategory() == 1) {
+			lessionDTO.setDate(LocalDateTime.now().toString());
+			Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
+			Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName("googledrivespringbootexample").build();
+			File file = new File();
+			file.setName(lessionDTO.getTitle()+".mp4");
+			FileContent content = new FileContent("video/mp4", new java.io.File(lessionDTO.getPath()));
+			file.setParents(Arrays.asList(resultProduct.block().getFolder()));
+			File uploadedFile = drive.files().create(file, content).setFields("id").execute();
+			String fileReference = uploadedFile.getId();
+			lessionDTO.setVideo(fileReference);
+		}
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(lesssionService.createLession(lessionDTO));
 	}
 	@GetMapping(value = { "/uploadinfolder" })
@@ -159,4 +164,5 @@ public class LessionController {
 		String fileReference = String.format("{fileID: '%s'}", uploadedFile.getId());
 		response.getWriter().write(fileReference);
 	}
+	
 }

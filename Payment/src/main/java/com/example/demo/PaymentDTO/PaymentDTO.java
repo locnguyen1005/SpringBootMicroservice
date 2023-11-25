@@ -18,5 +18,5 @@ public class PaymentDTO {
 	private Long productid;
 	private LocalDateTime day;
 	private Long price;
-	private String coupon;
+	
 }

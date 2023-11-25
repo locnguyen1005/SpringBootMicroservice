@@ -66,16 +66,5 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet id="table-payment-add-column-coupon" author="payment" runAlways="true">
-        <preConditions onFail="CONTINUE" onFailMessage="column coupon already exists in table payment">
-            <not>
-                <columnExists  tableName="payment" columnName="coupon" />
-            </not>
-        </preConditions>
-        <addColumn tableName="payment">
-            <column name="coupon" type="VARCHAR(255)">
-                <constraints nullable="false" />
-            </column>
-        </addColumn>
-    </changeSet>
+  
 </databaseChangeLog>
