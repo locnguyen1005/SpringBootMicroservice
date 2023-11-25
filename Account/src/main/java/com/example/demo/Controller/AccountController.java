@@ -70,6 +70,7 @@ public class AccountController {
 				.getResourceAsStream(Constant.JSON_CREATE_ACCOUNT);
 		CommonValidate.jsonValidate(requestStr, inputStream);
 		log.info(requestStr);
+		log.info(requestStr);
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(accountService.createAccount(gson.fromJson(requestStr, AccountDTO.class)));
 	}
