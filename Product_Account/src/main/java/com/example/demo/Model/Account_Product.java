@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account_Product {
-	private String nameProduct;
-	private String nameUser;
+	private String nameproduct;
+	private String description;
+	private Long category;
+	private String image;
+	private String email;
+	private Long price;
+	private String apiimage;
 }

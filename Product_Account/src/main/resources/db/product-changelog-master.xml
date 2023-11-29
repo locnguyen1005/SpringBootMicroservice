@@ -7,4 +7,6 @@
 	
 	
     <include file="db/product-changelog-create.xml" />
+    <include file="db/quiz-changelog-create.xml" />
+    <include file="db/lession-changelog-create.xml" />
 </databaseChangeLog>

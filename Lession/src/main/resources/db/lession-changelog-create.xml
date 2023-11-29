@@ -52,19 +52,7 @@
         </preConditions>
         <addColumn tableName="lession">
             <column name="video" type="VARCHAR(255)">
-                <constraints nullable="false" />
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet id="table-lession-add-column-path" author="lession" runAlways="true">
-        <preConditions onFail="CONTINUE" onFailMessage="column path already exists in table lession">
-            <not>
-                <columnExists  tableName="lession" columnName="path" />
-            </not>
-        </preConditions>
-        <addColumn tableName="lession">
-            <column name="path" type="VARCHAR(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
         </addColumn>
     </changeSet>
@@ -80,26 +68,27 @@
             </column>
         </addColumn>
     </changeSet>
-    <changeSet id="table-lession-add-column-folder" author="lession" runAlways="true">
-        <preConditions onFail="CONTINUE" onFailMessage="column folder already exists in table lession">
+
+    <changeSet id="table-lession-add-column-deletesoft" author="lession" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column deletesoft already exists in table lession">
             <not>
-                <columnExists  tableName="lession" columnName="folder" />
+                <columnExists  tableName="lession" columnName="deletesoft" />
             </not>
         </preConditions>
         <addColumn tableName="lession">
-            <column name="folder" type="VARCHAR(255)">
+            <column name="deletesoft" type="BIGINT">
                 <constraints nullable="false" />
             </column>
         </addColumn>
     </changeSet>
-    <changeSet id="table-lession-add-column-delete" author="lession" runAlways="true">
-        <preConditions onFail="CONTINUE" onFailMessage="column delete already exists in table lession">
+    <changeSet id="table-lession-add-column-date" author="lession" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column date already exists in table lession">
             <not>
-                <columnExists  tableName="lession" columnName="delete" />
+                <columnExists  tableName="lession" columnName="date" />
             </not>
         </preConditions>
         <addColumn tableName="lession">
-            <column name="delete" type="BIGINT">
+            <column name="date" type="VARCHAR(255)">
                 <constraints nullable="false" />
             </column>
         </addColumn>

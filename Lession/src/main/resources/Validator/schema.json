@@ -15,11 +15,15 @@
     "description": {
       "type": "string"
     },
-    "path": {
-      "type": "string"
-    },
     "video": {
       "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deletesoft": {
+      "type": "integer"
     }
 
   },

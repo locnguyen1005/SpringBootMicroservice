@@ -66,15 +66,39 @@
             </column>
 		</addColumn>
 	</changeSet>
-	<changeSet id="add-colume-maxuser" author="product" runAlways="true">
-		<preConditions onFail="CONTINUE" onFailMessage="colume maxuser already exists in table product">
+	<changeSet id="add-colume-description" author="product" runAlways="true">
+		<preConditions onFail="CONTINUE" onFailMessage="colume description already exists in table product">
 			<not>
-				<columnExists tableName="product" columnName="maxuser" />
+				<columnExists tableName="product" columnName="description" />
 			</not>
 		</preConditions>
 		<addColumn tableName="product">
-			<column name="maxuser" type="TIMESTAMP">
-                <constraints nullable="true" />
+			<column name="description" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="add-colume-category-product" author="product" runAlways="true">
+		<preConditions onFail="CONTINUE" onFailMessage="colume category already exists in table product">
+			<not>
+				<columnExists tableName="product" columnName="category" />
+			</not>
+		</preConditions>
+		<addColumn tableName="product">
+			<column name="category" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="add-colume-image-product" author="product" runAlways="true">
+		<preConditions onFail="CONTINUE" onFailMessage="colume image already exists in table product">
+			<not>
+				<columnExists tableName="product" columnName="image" />
+			</not>
+		</preConditions>
+		<addColumn tableName="product">
+			<column name="image" type="VARCHAR(255)">
+                <constraints nullable="true" />	
             </column>
 		</addColumn>
 	</changeSet>

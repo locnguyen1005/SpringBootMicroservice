@@ -17,4 +17,6 @@ public class Lession {
 	private String description;
 	private Long productId;
 	private String folder;
+	private Long deletesoft;
+	private String date;
 }

@@ -21,11 +21,11 @@ import lombok.With;
 public class LessionDTO {
 	private Long id;
 	private String video;
-	private String path;
+
 	private String title;
 	private String description;
 	private Long productId;
-	private String folder;
-	private Long delete;
+
+	private Long deletesoft;
 	private String date;
 }

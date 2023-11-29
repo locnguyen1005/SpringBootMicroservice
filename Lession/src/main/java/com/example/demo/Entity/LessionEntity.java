@@ -1,5 +1,7 @@
 package com.example.demo.Entity;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -20,11 +22,12 @@ public class LessionEntity {
 	@Id
 	private Long id;
 	private String video;
-	private String path;
+
 	private String title;
 	private String description;
 	@Column("productId")
 	private Long productId;
-	private String folder;
-	private Long delete;
+
+	private Long deletesoft;
+	private String date;
 }
