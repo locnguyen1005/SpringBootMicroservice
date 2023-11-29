@@ -1,9 +1,11 @@
 package com.example.demo.PaymentController;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.Model.Account;
+import com.example.demo.Model.AccountRegister;
 import com.example.demo.Model.Product;
 import com.example.demo.PaymentConfig.PaymentConfig;
 import com.example.demo.PaymentEntity.PaymentEntity;
@@ -24,21 +26,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.bouncycastle.oer.its.ieee1609dot2.basetypes.PublicEncryptionKey;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.websocket.server.PathParam;
+
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Flux;
+
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -61,23 +60,25 @@ public class PaymentController {
 //        Long productID = Long.parseLong(queryParams.get("productID"));
 //        Long price = Long.parseLong(queryParams.get("vnp_Amount"));
 //        Long accountID = Long.parseLong(queryParams.get("vnp_Command"));
-//        paymentEntity.setAccountid(accountID);
-//        paymentEntity.setPrice(price);
-//        paymentEntity.setProductid(productID);
-//        paymentEntity.setDay(LocalDateTime.now());
+        paymentEntity.setAccountid(Long.parseLong(queryParams.get("account")));
+        paymentEntity.setPrice(Long.parseLong(queryParams.get("vnp_Amount")));
+        paymentEntity.setProductid(Long.parseLong(queryParams.get("productID")));
+        paymentEntity.setDay(LocalDateTime.now());
         log.info(queryParams.get("account"));
         log.info(queryParams.get("vnp_Amount"));
         log.info(queryParams.get("productID"));
+        AccountRegister accountRegisterCommon = new AccountRegister();
+        accountRegisterCommon.setAccountId(Long.parseLong(queryParams.get("account")));
+        accountRegisterCommon.setProductId(Long.parseLong(queryParams.get("productID")));
         if(paymentEntity!= null && !paymentEntity.equals("")) {
             if ("00".equals(vnp_ResponseCode)) {
-//                // Giao dịch thành công
-//                // Thực hiện các xử lý cần thiết, ví dụ: cập nhật CSDL
-//                Contract contract = contractRepository.findById(Integer.parseInt(queryParams.get("contractId")))
-//                .orElseThrow(() -> new NotFoundException("Không tồn tại hợp đồng này của sinh viên"));
-//            contract.setStatus(1);
-//            contractRepository.save(contract);
-//            response.sendRedirect("http://localhost:4200/info-student");
             	
+            	Mono<AccountRegister> resultAccount = webBuilder.build().post()
+                        .uri("http://localhost:9000/ProductAccount/Post")
+                        .body(BodyInserters.fromValue(accountRegisterCommon))
+                        .retrieve()
+                        .bodyToMono(AccountRegister.class);
+            	log.info(resultAccount.block().toString());
             } else {
                 // Giao dịch thất bại
                 // Thực hiện các xử lý cần thiết, ví dụ: không cập nhật CSDL\
@@ -85,22 +86,7 @@ public class PaymentController {
                 
             }
         }
-        if(registerServiceId!= null && !registerServiceId.equals("")) {
-            if ("00".equals(vnp_ResponseCode)) {
-//                // Giao dịch thành công
-//                // Thực hiện các xử lý cần thiết, ví dụ: cập nhật CSDL
-//                RegisterServices registerServices = registerServicesRepository.findById(Integer.parseInt(queryParams.get("registerServiceId")))
-//                .orElseThrow(() -> new NotFoundException("Không tồn tại dịch vụ này của sinh viên"));
-//            registerServices.setStatus(1);
-//            registerServicesRepository.save(registerServices);
-//            response.sendRedirect("http://localhost:4200/info-student");
-            } else {
-                // Giao dịch thất bại
-                // Thực hiện các xử lý cần thiết, ví dụ: không cập nhật CSDL\
-                response.sendRedirect("http://localhost:4200/payment-failed");
-                
-            }
-        }
+
     }
 	@GetMapping
 	public String getpaymen() {

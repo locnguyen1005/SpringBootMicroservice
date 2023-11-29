@@ -11,11 +11,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.amazonaws.HttpMethod;
+import com.example.demo.DTO.LessionClient;
 import com.example.demo.DTO.LessionDTO;
 import com.example.demo.Model.Product;
 import com.example.demo.Service.LesssionService;
@@ -35,6 +43,9 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.gson.Gson;
+
+import ch.qos.logback.classic.Logger;
+
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -48,121 +59,39 @@ import reactor.core.publisher.Mono;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 
-
+@RequestMapping("/Lession")
 @RestController
 @Slf4j
 public class LessionController {
-	private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-	private static JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-	private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE,
-			"https://www.googleapis.com/auth/drive.install");
-
-	private static final String USER_IDENTIFIER_KEY = "MY_DUMMY_USER";
-    
-    @Value("${google.oauth.callback.uri}")
-	private String CALLBACK_URI;
-	@Value("${google.secret.key.path}")
-	private Resource gdSecretKeys;
-	@Value("${google.credentials.folder.path}")
-	private Resource credentialsFolder;
-
-	
-	private GoogleAuthorizationCodeFlow flow;
-	
-	@Autowired
-	private WebClient.Builder webBuilder;
 	
 	@Autowired
 	private LesssionService lesssionService;
 	@Autowired
 	Gson gson = new Gson();
 	
-	@PostConstruct
-	public void init() throws Exception {
-		GoogleClientSecrets secrets = GoogleClientSecrets.load(JSON_FACTORY,
-				new InputStreamReader(gdSecretKeys.getInputStream()));
-		flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, SCOPES)
-				.setDataStoreFactory(new FileDataStoreFactory(credentialsFolder.getFile())).build();
-	}
-	@GetMapping("/googlesignin" )
-	public void doGoogleSignIn(HttpServletResponse response) throws Exception {
-		GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
-		String redirectURL = url.setRedirectUri(CALLBACK_URI).setAccessType("offline").build();
-		response.sendRedirect(redirectURL);
-	}
-	@GetMapping(value = { "/oauth" })
-	public String saveAuthorizationCode(HttpServletRequest request) throws Exception {
-		String code = request.getParameter("code");
-		if (code != null) {
-			saveToken(code);
-
-			return "dashboard.html";
-		}
-		return "index.html";
-	}
-	private void saveToken(String code) throws Exception {
-		GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(CALLBACK_URI).execute();
-		flow.createAndStoreCredential(response, USER_IDENTIFIER_KEY);
-	}
 	
-	@GetMapping("/")
-	public FileList getallListlession()throws Exception{
-		Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
-		Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName("googledrivespringbootexample").build();
-		Flux<LessionDTO> allLesssionDTO = lesssionService.getAllAccount();
-		FileList fileList = drive.files().list().setFields("files(id,name,thumbnailLink,webViewLink , webContentLink,lastModifyingUser,permissions)").execute();
-		return fileList;
-	}
+	
+
 	@GetMapping("/getall")
-	public Flux<LessionDTO> getall() {
+	public Flux<LessionClient> getall() {
 		return lesssionService.getAllAccount();
 	}
 	@PostMapping("/Create")
-	public ResponseEntity<Mono<LessionDTO>> createAccount(@RequestBody String requestStr)throws Exception{
-		//đổi chuỗi String qua json
-		InputStream inputStream = LessionController.class.getClassLoader().getResourceAsStream(com.example.demo.Utils.Constant.JSON_CREATE_ACCOUNT);
-		CommonValidate.jsonValidate(requestStr, inputStream);
-		LessionDTO lessionDTO = gson.fromJson(requestStr,LessionDTO.class);
-		
-		//gọi api product để lấy folder của product đó và set vào lession
-		Mono<Product> resultProduct = webBuilder.build().get()
-                .uri("http://localhost:8889/product/"+lessionDTO.getProductId())
-                .retrieve()
-                .bodyToMono(Product.class);
-		lessionDTO.setFolder(resultProduct.block().getFolder());
-		if(resultProduct.block().getCategory() == 1) {
-			lessionDTO.setDate(LocalDateTime.now().toString());
-			Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
-			Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred).setApplicationName("googledrivespringbootexample").build();
-			File file = new File();
-			file.setName(lessionDTO.getTitle()+".mp4");
-			FileContent content = new FileContent("video/mp4", new java.io.File(lessionDTO.getPath()));
-			file.setParents(Arrays.asList(resultProduct.block().getFolder()));
-			File uploadedFile = drive.files().create(file, content).setFields("id").execute();
-			String fileReference = uploadedFile.getId();
-			lessionDTO.setVideo(fileReference);
-		}
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(lesssionService.createLession(lessionDTO));
-	}
-	@GetMapping(value = { "/uploadinfolder" })
-	public void uploadFileInFolder(HttpServletResponse response) throws Exception {
-		Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
-
-		Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred)
-				.setApplicationName("googledrivespringbootexample").build();
-
-		File file = new File();
-		file.setName("digit.jpg");
-		file.setParents(Arrays.asList("1_TsS7arQRBMY2t4NYKNdxta8Ty9r6wva"));
-
-		FileContent content = new FileContent("image/jpeg", new java.io.File("D:\\practice\\sbtgd\\digit.jpg"));
-		File uploadedFile = drive.files().create(file, content).setFields("id").execute();
-
-		String fileReference = String.format("{fileID: '%s'}", uploadedFile.getId());
-		response.getWriter().write(fileReference);
+	public ResponseEntity<Mono<LessionDTO>> createAccount(@RequestParam("data") String requestStr , @RequestParam(value = "file") MultipartFile file)throws Exception{
+			//đổi chuỗi String qua json
+			InputStream inputStream = LessionController.class.getClassLoader().getResourceAsStream(com.example.demo.Utils.Constant.JSON_CREATE_ACCOUNT);
+			CommonValidate.jsonValidate(requestStr, inputStream);
+			LessionDTO lessionDTO = gson.fromJson(requestStr,LessionDTO.class);
+			return ResponseEntity.status(HttpStatus.CREATED).body(lesssionService.createLession(lessionDTO , file));
 	}
 	
+	@PutMapping("/edit/{id}")
+	public ResponseEntity<Mono<LessionDTO>> editlession(@RequestBody LessionDTO lessionDTO)throws Exception{
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(lesssionService.updatelession(lessionDTO));
+	}
+
 }

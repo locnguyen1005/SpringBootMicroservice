@@ -8,20 +8,27 @@ spring:
     gateway:
       routes:
         - id: Account-Service
-          uri: http://localhost:8880
-          predicates:
-            - Path=/Account/Create
-        - id: Account-Service
-          uri: http://localhost:8880
-          predicates:
-            - Path=/Account/authenticate
-        - id: Account-Service
-          uri: http://localhost:8880
+          uri: http://localhost:9006
           predicates:
             - Path=/Account/**
-          filters:
-           - AuthenticationFilter
-           
+#          filters:
+#           - AuthenticationFilter
+
+        - id: Product-Service
+          uri: http://localhost:8889
+          predicates:
+            - Path=/product/**
+            
+        - id: Product-Account-Service
+          uri: http://localhost:9001
+          predicates:
+            - Path=/ProductAccount/** 
+            
+        - id: Lession-Service
+          uri: http://localhost:9092
+          predicates:
+            - Path=/Lession/** 
+         
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       globalcors:

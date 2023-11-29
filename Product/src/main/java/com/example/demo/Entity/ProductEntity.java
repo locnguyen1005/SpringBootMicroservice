@@ -24,4 +24,5 @@ public class ProductEntity {
 	private String description;
 	private String folder;
 	private Long category;
+	private String image;
 }

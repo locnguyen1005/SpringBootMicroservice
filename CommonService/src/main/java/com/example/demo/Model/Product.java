@@ -17,6 +17,7 @@ public class Product {
 	private Long accountid;
 	private Long price;
 	private String description;
-	private String folder;
 	private Long category;
+	private String image;
+	private String apiimage;
 }

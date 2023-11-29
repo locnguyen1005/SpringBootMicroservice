@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.example.demo.DTO.ProductClient;
 import com.example.demo.DTO.ProductDTO;
 import com.example.demo.Model.Account;
 import com.example.demo.Model.Product;
@@ -55,15 +57,15 @@ public class ProductController {
 	
 	
 	@GetMapping("/getall")
-	public Flux<ProductDTO> getAllProduct(){
+	public Flux<ProductClient> getAllProduct(){
 		return productService.getAllProduct();
 	}
 	@PostMapping("/createproduct")
-	public ResponseEntity<Mono<ProductDTO>> createProduct(@RequestBody String product) throws JsonSyntaxException, IOException{
+	public ResponseEntity<Mono<ProductDTO>> createProduct(@RequestParam(value = "data") String product , @RequestParam(value = "file") MultipartFile file) throws JsonSyntaxException, IOException{
 		log.info(product);
 		InputStream inputStream = ProductController.class.getClassLoader().getResourceAsStream(Constant.JSON_Product);
 		CommonValidate.jsonValidate(product, inputStream);
-		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(gson.fromJson(product, ProductDTO.class)));
+		return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(gson.fromJson(product, ProductDTO.class),file));
 	}
 	@GetMapping("/{id}")
 	public ResponseEntity<Mono<ProductDTO>> detailProduct(@PathVariable Long id){

@@ -22,12 +22,12 @@ public class LessionEntity {
 	@Id
 	private Long id;
 	private String video;
-	private String path;
+
 	private String title;
 	private String description;
 	@Column("productId")
 	private Long productId;
-	private String folder;
-	private Long delete;
+
+	private Long deletesoft;
 	private String date;
 }

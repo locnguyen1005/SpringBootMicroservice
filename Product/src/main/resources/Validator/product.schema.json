@@ -15,7 +15,18 @@
     "price": {
       "type": "integer"
 
+    },
+    "description": {
+      "type": "string"
+    },
+    "folder": {
+      "type": "string"
+    },
+    "category": {
+      "type": "integer"
     }
+    
+   
   },
   "required": ["name"]
 }
