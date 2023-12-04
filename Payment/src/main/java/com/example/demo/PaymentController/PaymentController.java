@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.Model.Account;
 import com.example.demo.Model.AccountRegister;
+import com.example.demo.Model.Answer;
 import com.example.demo.Model.Product;
 import com.example.demo.PaymentConfig.PaymentConfig;
 import com.example.demo.PaymentEntity.PaymentEntity;
@@ -49,7 +50,7 @@ public class PaymentController {
 	@Autowired
 	private WebClient.Builder webBuilder;
 	@GetMapping("/payment-callback")
-    public void paymentCallback(@RequestParam Map<String, String> queryParams,HttpServletResponse response ) throws IOException {
+    public Mono<String> paymentCallback(@RequestParam Map<String, String> queryParams,HttpServletResponse response ) throws IOException {
 	
         String vnp_ResponseCode = queryParams.get("vnp_ResponseCode");
 
@@ -67,18 +68,24 @@ public class PaymentController {
         log.info(queryParams.get("account"));
         log.info(queryParams.get("vnp_Amount"));
         log.info(queryParams.get("productID"));
+        //tạo người đã đăng ký khóa học
         AccountRegister accountRegisterCommon = new AccountRegister();
         accountRegisterCommon.setAccountId(Long.parseLong(queryParams.get("account")));
         accountRegisterCommon.setProductId(Long.parseLong(queryParams.get("productID")));
+        
+        Answer answer = new Answer();
+        answer.setAccountid(Long.parseLong(queryParams.get("account")));
+        answer.setLessionid(Long.parseLong(queryParams.get("productID")));
+        answer.setProductid(Long.parseLong(queryParams.get("productID")));
         if(paymentEntity!= null && !paymentEntity.equals("")) {
             if ("00".equals(vnp_ResponseCode)) {
-            	
-            	Mono<AccountRegister> resultAccount = webBuilder.build().post()
-                        .uri("http://localhost:9000/ProductAccount/Post")
-                        .body(BodyInserters.fromValue(accountRegisterCommon))
+           
+            	Mono<String> resultQuiz = webBuilder.build().post()
+                        .uri("http://localhost:9000/Answer/Create")
+                        .body(BodyInserters.fromValue(answer))
                         .retrieve()
-                        .bodyToMono(AccountRegister.class);
-            	log.info(resultAccount.block().toString());
+                        .bodyToMono(String.class);
+            	log.info(resultQuiz.block().toString());
             } else {
                 // Giao dịch thất bại
                 // Thực hiện các xử lý cần thiết, ví dụ: không cập nhật CSDL\
@@ -86,7 +93,7 @@ public class PaymentController {
                 
             }
         }
-
+        return Mono.just("true");
     }
 	@GetMapping
 	public String getpaymen() {
@@ -167,5 +174,16 @@ public class PaymentController {
 		
 		return paymentUrl;
 	}
+    @GetMapping("/payment")
+    public Mono<Answer> demo() {
+    	Answer answer = new Answer();
+    	Mono<Answer> resultQuiz = webBuilder.build().post()
+                .uri("http://localhost:9000/Lession/Loc")
+                .body(BodyInserters.fromValue(answer))
+                .retrieve()
+                .bodyToMono(Answer.class);
+    	log.info(resultQuiz.block().toString());
+    	return resultQuiz;
+    } 
     
 }

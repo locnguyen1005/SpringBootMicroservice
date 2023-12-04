@@ -41,7 +41,6 @@ public class QuizService{
 				return Mono.error(new CommonException(quizDTO.getQuestion(), "The course name already exists", HttpStatus.BAD_REQUEST));
 			}
 			else {
-
 				
 				return Mono.just(quizDTO)
 						.map(productdto -> modelMapper.map(productdto, Quiz.class))
@@ -50,10 +49,13 @@ public class QuizService{
 						.doOnSubscribe(dto -> log.info("susscess"));
 			}
 		} catch (Exception e) {
-			return Mono.error(new CommonException("", "", HttpStatus.BAD_REQUEST));
+			return Mono.error(new CommonException(e.toString(), "", HttpStatus.BAD_REQUEST));
 		}
 	}
 	public Mono<QuizDTO> finđById(Long productDTOID){
 		return quizRepository.findById(productDTOID).map(ProductDTO -> modelMapper.map(ProductDTO, QuizDTO.class)).switchIfEmpty(Mono.error(new CommonException("Product00", "Products is empty", HttpStatus.BAD_REQUEST)));
+	}
+	public Flux<QuizDTO> getAllQuizProductID(Long productid){
+		return quizRepository.findByProductid(productid).map(ProductDTO -> modelMapper.map(ProductDTO, QuizDTO.class)).switchIfEmpty(Mono.error(new CommonException("Product00", "Products is empty", HttpStatus.BAD_REQUEST)));
 	}
 }

@@ -18,6 +18,11 @@
 		<spring-cloud.version>2023.0.0-RC1</spring-cloud.version>
 	</properties>
 	<dependencies>
+				<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>CommonService</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -36,6 +41,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
     </dependency>
+     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

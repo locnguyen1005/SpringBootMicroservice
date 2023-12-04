@@ -7,13 +7,13 @@
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
 			<item value="mongo"/>
+			<item value="Mono&lt;Answer&gt; newAnswer1 =answerRepository.save(newAnswer);"/>
+			<item value="Payment"/>
+			<item value="aws"/>
+			<item value="commo"/>
 			<item value="path"/>
 			<item value="File"/>
 			<item value="vnp_Params"/>
-			<item value="getPayService"/>
-			<item value="vnp_ReturnUrl"/>
-			<item value="vnp_Account"/>
-			<item value="contractId"/>
 		</list>
 		<list key="replacehistory">
 		</list>

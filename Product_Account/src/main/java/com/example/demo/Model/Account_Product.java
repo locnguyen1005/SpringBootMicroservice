@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Account_Product {
 	private String nameproduct;
 	private String description;
-	private Long category;
+	private String category;
 	private String image;
 	private String email;
 	private Long price;

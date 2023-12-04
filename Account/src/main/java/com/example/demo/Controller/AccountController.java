@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.service.annotation.GetExchange;
 
 import com.example.demo.Config.CustomUserDetailsService;
@@ -65,14 +66,14 @@ public class AccountController {
 	}
 
 	@PostMapping("/Create")
-	public ResponseEntity<Mono<AccountDTO>> createAccount(@RequestBody String requestStr) {
+	public ResponseEntity<Mono<AccountDTO>> createAccount(@RequestParam("data") String requestStr , @RequestParam(value = "file") MultipartFile file) {
 		InputStream inputStream = AccountController.class.getClassLoader()
 				.getResourceAsStream(Constant.JSON_CREATE_ACCOUNT);
 		CommonValidate.jsonValidate(requestStr, inputStream);
 		log.info(requestStr);
 		log.info(requestStr);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(accountService.createAccount(gson.fromJson(requestStr, AccountDTO.class)));
+				.body(accountService.createAccount(gson.fromJson(requestStr, AccountDTO.class),file));
 	}
 	@PostMapping("/authenticate")
     public String authenticateAndGetToken(@RequestBody AccountDTO authRequest) {
@@ -85,13 +86,10 @@ public class AccountController {
         }
     }
 	@GetMapping("/login")
-	public Mono<AccountEntity> login(){
-		
+	public Mono<AccountEntity> login(){	
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			Mono<AccountEntity> accountEntity = accountService.findAccount(userDetails.getUsername());
 			return accountEntity;
-		
 	}
-
 }

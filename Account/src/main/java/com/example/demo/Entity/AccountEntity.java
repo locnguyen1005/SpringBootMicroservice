@@ -22,5 +22,8 @@ public class AccountEntity {
 	private Long id;
 	private String password;
 	private String email;
+	private String fullname;
+	private String avaterimage;
+	private String role;
 	
 }

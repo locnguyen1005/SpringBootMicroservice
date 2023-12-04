@@ -13,20 +13,21 @@ public class CustomUserDetails implements UserDetails {
 
     private String email;
     private String password;
+    private String role;
 
     public CustomUserDetails(AccountEntity userCredential) {
         this.email = userCredential.getEmail();
         this.password = userCredential.getPassword();
+        this.role=userCredential.getRole();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
     	Collection<GrantedAuthority> authorities =
                 new ArrayList<GrantedAuthority>();
-    	authorities.add(new SimpleGrantedAuthority("ADMIN"));
+    	authorities.add(new SimpleGrantedAuthority(this.role));
         return authorities;
     }
-
     @Override
     public String getPassword() {
         return password;

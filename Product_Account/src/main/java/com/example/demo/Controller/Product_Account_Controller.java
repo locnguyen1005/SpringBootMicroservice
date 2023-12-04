@@ -67,4 +67,8 @@ public class Product_Account_Controller {
 	public Mono<AccountRegister> register(AccountRegister accountRegister){
 		return 	service.registerProduct(accountRegister);
 	}
+	@GetMapping("/demoapi")
+	public void register(){
+		log.info("register true");
+	}
 }
