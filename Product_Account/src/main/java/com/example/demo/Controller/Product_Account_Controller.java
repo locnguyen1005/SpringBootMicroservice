@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,11 +50,29 @@ public class Product_Account_Controller {
                 .collect(Collectors.toMap(Account::getId, account -> account));
 		//personMap.get(person.getAccountid()).getEmail()
 		List<Account_Product> mergedDataList = resultProduct.toStream()
-                .map(person -> new Account_Product(person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage()))
+                .map(person -> new Account_Product(person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage() ,personMap.get(person.getAccountid()).getAvaterimage(), personMap.get(person.getAccountid()).getFullname()))
                 .collect(Collectors.toList());
 		return mergedDataList;
 	}
-	
+	@GetMapping("/demo/{productid}")
+	public List<Account_Product> getallProductId(@PathVariable Long productid){
+		Flux<Product> resultProduct = webBuilder.build().get()
+                .uri("http://localhost:8889/product/"+productid)
+                .retrieve()
+                .bodyToFlux(Product.class);
+		Flux<Account> resultAccount = webBuilder.build().get()
+                .uri("http://localhost:9006/Account/GetAll")
+                .retrieve()
+                .bodyToFlux(Account.class);
+		
+		Map<Long, Account> personMap = resultAccount.toStream()
+                .collect(Collectors.toMap(Account::getId, account -> account));
+		//personMap.get(person.getAccountid()).getEmail()
+		List<Account_Product> mergedDataList = resultProduct.toStream()
+                .map(person -> new Account_Product(person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage() ,personMap.get(person.getAccountid()).getAvaterimage(), personMap.get(person.getAccountid()).getFullname()))
+                .collect(Collectors.toList());
+		return mergedDataList;
+	}
 	@PostMapping("/Post")
 	public Mono<AccountRegister> registerCourse(@RequestBody AccountRegister accountRegister){
 		log.info("register true");

@@ -19,4 +19,6 @@ public class Account_Product {
 	private String email;
 	private Long price;
 	private String apiimage;
+	private String avaterimage;
+	private String fullname;
 }
