@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountRegister {
-
 	private long id;
 	private long productId;
 	private long accountId;

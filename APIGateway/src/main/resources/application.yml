@@ -25,10 +25,19 @@ spring:
             - Path=/ProductAccount/** 
             
         - id: Lession-Service
-          uri: http://localhost:9092
+          uri: http://localhost:9003
           predicates:
             - Path=/Lession/** 
-         
+            
+        - id: Answer-Service
+          uri: http://localhost:8888
+          predicates:
+            - Path=/Answer/**
+            
+        - id: Payment-Service
+          uri: http://localhost:9002
+          predicates:
+            - Path=/api/v1/** 
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       globalcors:

@@ -17,4 +17,5 @@ public class Lession_AccountDTO {
 	private long lessionId;
 	private long accountId;
 	private long score;
+	private long time;
 }

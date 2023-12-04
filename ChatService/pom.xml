@@ -36,7 +36,11 @@
     <version>4.11.1</version>
     <scope>test</scope>
 </dependency>
-
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>CommonService</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

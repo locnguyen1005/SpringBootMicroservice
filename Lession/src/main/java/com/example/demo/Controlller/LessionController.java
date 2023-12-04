@@ -25,7 +25,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.amazonaws.HttpMethod;
 import com.example.demo.DTO.LessionClient;
 import com.example.demo.DTO.LessionDTO;
+import com.example.demo.Model.Answer;
 import com.example.demo.Model.Product;
+import com.example.demo.Repository.LessionRepository;
 import com.example.demo.Service.LesssionService;
 import com.example.demo.utils.CommonValidate;
 import com.example.demo.utils.ConstantCommon;
@@ -65,16 +67,11 @@ import org.springframework.stereotype.Repository;
 @RestController
 @Slf4j
 public class LessionController {
-
-	
 	@Autowired
 	private LesssionService lesssionService;
 	@Autowired
 	Gson gson = new Gson();
 	
-	
-	
-
 	@GetMapping("/getall")
 	public Flux<LessionClient> getall() {
 		return lesssionService.getAllAccount();
@@ -93,5 +90,15 @@ public class LessionController {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(lesssionService.updatelession(lessionDTO));
 	}
-
+	@PostMapping("/Loc")
+    public Mono<Answer> demo(@RequestBody Answer answer) {
+		log.info("answer true");
+		answer.setAccountid(1l);
+		log.info(answer.toString());
+		return Mono.just(answer);
+    }
+	@GetMapping("/GetAllBy/{productid}")
+	public Flux<LessionDTO> getallbyproductId(@PathVariable Long productid){
+		return lesssionService.getAllLessionByProductId(productid);
+	}
 }

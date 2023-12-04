@@ -16,7 +16,15 @@
 			"minLength": 8,
 			"maxLength": 20,
 			"pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%^&*])"
-		}	
+		},
+		"fullname":{
+			"type": "string",
+			"minLength": 8,
+			"maxLength": 20
+		},
+		"avaterimage":{
+			"type": "string"
+		}
 	},
-	"required": ["email","password"]
+	"required": ["email","password","fullname"]
 }

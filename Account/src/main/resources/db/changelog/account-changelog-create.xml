@@ -44,4 +44,28 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="table-account-add-column-fullname" author="account" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column fullname already exists in table account">
+            <not>
+                <columnExists  tableName="account" columnName="fullname" />
+            </not>
+        </preConditions>
+        <addColumn tableName="account">
+            <column name="fullname" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="table-account-add-column-avaterimage" author="account" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column avaterimage already exists in table account">
+            <not>
+                <columnExists  tableName="account" columnName="avaterimage" />
+            </not>
+        </preConditions>
+        <addColumn tableName="account">
+            <column name="avaterimage" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

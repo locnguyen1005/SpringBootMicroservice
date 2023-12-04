@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-@Document(collection = "answer")
+@Document(collection = "Answer")
 public class Answer {
     @Id
     private String id;
@@ -27,4 +27,5 @@ public class Answer {
     private String answer;
     private Long result;
     private Long lessionid;
+    private Long productid;
 }

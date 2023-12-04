@@ -82,10 +82,10 @@ public class LesssionService {
 	public Mono<LessionDTO> createLession(LessionDTO lessionDTO , MultipartFile file) throws IOException {
 
 		try {
-			if ((checkDuplicate(lessionDTO).block()).equals(Boolean.TRUE)) {
-				return Mono.error(
-						new CommonException(lessionDTO.getTitle(), "Name lession duplicate", HttpStatus.BAD_REQUEST));
-			}
+//			if ((checkDuplicate(lessionDTO).block()).equals(Boolean.TRUE)) {
+//				return Mono.error(
+//						new CommonException(lessionDTO.getTitle(), "Name lession duplicate", HttpStatus.BAD_REQUEST));
+//			}
 			File fileObj = convertMultiPartFileToFile(file);
 	        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 	        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
@@ -134,15 +134,6 @@ public class LesssionService {
         cal.add(Calendar.DAY_OF_YEAR,6);
         return amazonS3.generatePresignedUrl(bucketName,filePath,cal.getTime(),http).toString();
     }
-	//Upload file
-	public String uploadFile(MultipartFile file) {
-        File fileObj = convertMultiPartFileToFile(file);
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
-        fileObj.delete();
-        return "File uploaded : " + fileName;
-    }
-	
 	private java.io.File convertMultiPartFileToFile(MultipartFile file) {
         java.io.File convertedFile = new File(file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
@@ -152,6 +143,16 @@ public class LesssionService {
         }
         return convertedFile;
     }
+	//Upload file
+	public String uploadFile(MultipartFile file) {
+        File fileObj = convertMultiPartFileToFile(file);
+        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+        fileObj.delete();
+        return "File uploaded : " + fileName;
+    }
+	
+	
 	public Mono<LessionClient> getvideoapi(LessionClient lessionClient) {
 		lessionClient.setVideoapi(generatePreSignedUrl(lessionClient.getVideo(),HttpMethod.GET));
 		return Mono.just(lessionClient);

@@ -23,6 +23,6 @@ public class ProductEntity {
 	private Long price;
 	private String description;
 	private String folder;
-	private Long category;
+	private String category;
 	private String image;
 }

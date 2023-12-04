@@ -14,10 +14,12 @@
         </preConditions>
         <!-- Create the 'quiz' table -->
         <createTable tableName="quiz">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            
             <column name="lessionid" type="BIGINT"/>
+            <column name="productid" type="BIGINT"/>
             <column name="question" type="VARCHAR(255)"/>
             <column name="choiceone" type="VARCHAR(255)"/>
             <column name="choicetwo" type="VARCHAR(255)"/>

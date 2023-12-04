@@ -2,6 +2,7 @@ package com.example.demo.Model;
 
 import org.bouncycastle.crypto.params.CramerShoupPrivateKeyParameters;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.AllArgsConstructor;
@@ -16,10 +17,14 @@ public class Quiz {
 	@Id
 	private long id;
 	private long lessionid;
+	@Column("question")
 	private String question;
 	private String choiceone;
 	private String choicetwo;
 	private String choicethree;
 	private String choicefour;
+	@Column("correctAnswer")
 	private String correctAnswer;
+	@Column("productid")
+	private long productid;
 }
