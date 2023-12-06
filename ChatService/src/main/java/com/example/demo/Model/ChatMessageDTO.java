@@ -17,11 +17,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @ToString
 public class ChatMessageDTO {
-
-    private String id;
-	private String senderName;
-    private String receiverName;
-    private String message;
-    private LocalDateTime date;
-    private Status status;
+	    private String id;
+		private String senderName;
+	    private String receiverName;
+	    private Long productid;
+	    private Long accountid;
+	    private String message;
+	    private LocalDateTime date;
+	    private Status status;
 }
