@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,10 +87,14 @@ public class AccountController {
         }
     }
 	@GetMapping("/login")
-	public Mono<AccountEntity> login(){	
+	public Mono<AccountDTO> login(){	
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			Mono<AccountEntity> accountEntity = accountService.findAccount(userDetails.getUsername());
+			Mono<AccountDTO> accountEntity = accountService.findAccount(userDetails.getUsername());
 			return accountEntity;
+	}
+	@GetMapping("/getEmail")
+	public Mono<AccountDTO> getaccountId(@RequestBody String email){	
+		return accountService.findAccount(email);
 	}
 }

@@ -29,6 +29,8 @@ public class ChatMessage {
     private String id;
 	private String senderName;
     private String receiverName;
+    private Long productid;
+    private Long accountid;
     private String message;
     private LocalDateTime date;
     private Status status;

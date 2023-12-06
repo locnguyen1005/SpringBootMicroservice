@@ -68,4 +68,16 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="table-account-add-column-role" author="account" runAlways="true">
+        <preConditions onFail="CONTINUE" onFailMessage="column role already exists in table account">
+            <not>
+                <columnExists  tableName="account" columnName="role" />
+            </not>
+        </preConditions>
+        <addColumn tableName="account">
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

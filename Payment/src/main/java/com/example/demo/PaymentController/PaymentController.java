@@ -65,27 +65,39 @@ public class PaymentController {
         paymentEntity.setPrice(Long.parseLong(queryParams.get("vnp_Amount")));
         paymentEntity.setProductid(Long.parseLong(queryParams.get("productID")));
         paymentEntity.setDay(LocalDateTime.now());
+        
         log.info(queryParams.get("account"));
         log.info(queryParams.get("vnp_Amount"));
         log.info(queryParams.get("productID"));
+        
         //tạo người đã đăng ký khóa học
         AccountRegister accountRegisterCommon = new AccountRegister();
         accountRegisterCommon.setAccountId(Long.parseLong(queryParams.get("account")));
         accountRegisterCommon.setProductId(Long.parseLong(queryParams.get("productID")));
         
+        //Tạo quiz cho người đăng ký
         Answer answer = new Answer();
         answer.setAccountid(Long.parseLong(queryParams.get("account")));
         answer.setLessionid(Long.parseLong(queryParams.get("productID")));
         answer.setProductid(Long.parseLong(queryParams.get("productID")));
         if(paymentEntity!= null && !paymentEntity.equals("")) {
             if ("00".equals(vnp_ResponseCode)) {
-           
+            	//tạo quizz khi đăng ký thành công
             	Mono<String> resultQuiz = webBuilder.build().post()
                         .uri("http://localhost:9000/Answer/Create")
                         .body(BodyInserters.fromValue(answer))
                         .retrieve()
                         .bodyToMono(String.class);
             	log.info(resultQuiz.block().toString());
+            	
+            	//tạo accountregister khi dky thành công
+            	Mono<AccountRegister> resultProductAccount = webBuilder.build().post()
+                        .uri("http://localhost:9000/ProductAccount/Create")
+                        .body(BodyInserters.fromValue(accountRegisterCommon))
+                        .retrieve()
+                        .bodyToMono(AccountRegister.class);
+            	log.info(resultQuiz.block().toString());
+            	
             } else {
                 // Giao dịch thất bại
                 // Thực hiện các xử lý cần thiết, ví dụ: không cập nhật CSDL\

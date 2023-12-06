@@ -100,8 +100,10 @@ public class AccountService {
 	}
 
 
-    public Mono<AccountEntity> findAccount(String accountDTO){
-		return accountRepository.findByEmail(accountDTO);
+    public Mono<AccountDTO> findAccount(String accountDTO){
+		return accountRepository.findByEmail(accountDTO).map(accountEntity -> mapper.map(accountEntity , AccountDTO.class))
+				.flatMap(accountclient -> getvideoapi(accountclient))
+				.switchIfEmpty(Mono.error(new Exception("Account Empty")));
 	}
 	//lấy API video
 	public String generatePreSignedUrl(String filePath, HttpMethod http) {

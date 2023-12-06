@@ -50,7 +50,7 @@ public class Product_Account_Controller {
                 .collect(Collectors.toMap(Account::getId, account -> account));
 		//personMap.get(person.getAccountid()).getEmail()
 		List<Account_Product> mergedDataList = resultProduct.toStream()
-                .map(person -> new Account_Product(person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage() ,personMap.get(person.getAccountid()).getAvaterimage(), personMap.get(person.getAccountid()).getFullname()))
+                .map(person -> new Account_Product(person.getId(),person.getAccountid() ,person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage() ,personMap.get(person.getAccountid()).getAvaterimage(), personMap.get(person.getAccountid()).getFullname()))
                 .collect(Collectors.toList());
 		return mergedDataList;
 	}
@@ -69,7 +69,7 @@ public class Product_Account_Controller {
                 .collect(Collectors.toMap(Account::getId, account -> account));
 		//personMap.get(person.getAccountid()).getEmail()
 		List<Account_Product> mergedDataList = resultProduct.toStream()
-                .map(person -> new Account_Product(person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage() ,personMap.get(person.getAccountid()).getAvaterimage(), personMap.get(person.getAccountid()).getFullname()))
+                .map(person -> new Account_Product(person.getId(),person.getAccountid() ,person.getName(), person.getDescription(), person.getCategory(), person.getImage(), personMap.get(person.getAccountid()).getEmail(), person.getPrice(),person.getApiimage() ,personMap.get(person.getAccountid()).getAvaterimage(), personMap.get(person.getAccountid()).getFullname()))
                 .collect(Collectors.toList());
 		return mergedDataList;
 	}

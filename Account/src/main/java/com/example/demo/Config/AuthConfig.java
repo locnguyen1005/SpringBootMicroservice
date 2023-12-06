@@ -37,14 +37,17 @@ public class AuthConfig {
 	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		 return http.csrf().disable()
 	                .authorizeHttpRequests()
-	                .requestMatchers("/Account/**").permitAll().and()
+	                .requestMatchers("/Account/**").permitAll()
+	                .and()
+	                .authorizeHttpRequests().requestMatchers("/products/**")
+	                .authenticated().and()
 	                .sessionManagement()
-	                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 	                .and()
 	                .authenticationProvider(authenticationProvider())
 	                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
 	                .build();
-	}
+	    }
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new CustomUserDetailsService();
