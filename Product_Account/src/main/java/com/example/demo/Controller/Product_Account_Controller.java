@@ -73,6 +73,7 @@ public class Product_Account_Controller {
                 .collect(Collectors.toList());
 		return mergedDataList;
 	}
+	//Lưu thông người đã đăng ký
 	@PostMapping("/Post")
 	public Mono<AccountRegister> registerCourse(@RequestBody AccountRegister accountRegister){
 		log.info("register true");
